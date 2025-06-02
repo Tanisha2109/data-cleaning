@@ -1,23 +1,33 @@
-# Customer Personality Analysis – Data Cleaning Task
+import pandas as pd
 
-This project is part of a Data Analyst Internship Task focused on cleaning and preprocessing a raw dataset.
+# Step 1: Load the dataset
+df = pd.read_csv('marketing_campaign.csv', sep=';')  # use correct separator
 
-## Dataset Used:
-**Customer Personality Analysis** from Kaggle
+# Step 2: Quick look at data
+print(df.info())
+print(df.head())
 
-## Steps Performed:
-- Loaded data using Pandas with correct separator
-- Removed rows with missing values
-- Removed duplicate records
-- Standardized text columns (`education`, `marital_status`)
-- Converted `Dt_Customer` to datetime format
-- Renamed all columns to lowercase with underscores
-- Changed `income` column to integer type
-- Exported cleaned dataset as `cleaned_customer_personality.csv`
+# Step 3: Handle missing values
+print(df.isnull().sum())  # check nulls
 
-## Tools Used:
-- Python
-- Pandas
+# Remove rows with missing values
+df.dropna(inplace=True)
 
-## Output:
-A cleaned dataset ready for further analysis or modeling.
+# Step 4: Remove duplicates
+df.drop_duplicates(inplace=True)
+
+# Step 5: Standardize text columns
+df['Education'] = df['Education'].str.lower()
+df['Marital_Status'] = df['Marital_Status'].str.lower()
+
+# Step 6: Convert date columns
+df['Dt_Customer'] = pd.to_datetime(df['Dt_Customer'], format='%d-%m-%Y')
+
+# Step 7: Rename columns
+df.columns = df.columns.str.lower().str.replace(' ', '_')
+
+# Step 8: Check and fix data types
+df['income'] = df['income'].astype(int)
+
+# Step 9: Save cleaned data
+df.to_csv('cleaned_customer_personality.csv', index=False)
